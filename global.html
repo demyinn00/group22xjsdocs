@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="checkFavorite"><span class="type-signature"></span>checkFavorite<span class="signature">(recipeID)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="addToCheckedLists"><span class="type-signature"></span>addToCheckedLists<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    Fetches from localstorage whether the recipe is already favorited or not
+    Add the recipe to all checked lists in the dropdown
 </div>
 
 
@@ -121,55 +121,6 @@
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>recipeID</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -205,7 +156,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line101">line 101</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -230,16 +181,94 @@
 
 
 
-<h5>Returns:</h5>
+
+
+
+
 
         
-<div class="param-desc">
-    - check recipe-id if in the favorite-master list
+            
+
+    
+
+    
+    <h4 class="name" id="addToCustomList"><span class="type-signature"></span>addToCustomList<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Adds the recipe to a custom list
 </div>
 
 
 
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
     
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -528,7 +557,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line42">line 42</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -638,7 +667,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line90">line 90</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -726,7 +755,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line117">line 117</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line143">line 143</a>
     </li></ul></dd>
     
 
@@ -914,6 +943,94 @@ and automatically extracts data from the query string and runs a search
     
 
     
+    <h4 class="name" id="initializeDropdown"><span class="type-signature"></span>initializeDropdown<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Initialize the dropdown content
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line85">line 85</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="initializeHearts"><span class="type-signature"></span>initializeHearts<span class="signature">(isFavorite)</span><span class="type-signature"></span></h4>
     
 
@@ -1015,7 +1132,7 @@ and automatically extracts data from the query string and runs a search
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line64">line 64</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -1192,7 +1309,7 @@ therefore, only initilize the favorite-master local storage when it does not eve
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line15">line 15</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line14">line 14</a>
     </li></ul></dd>
     
 
@@ -1352,7 +1469,7 @@ The position will be the title length
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line79">line 79</a>
+        <a href="recipe.js.html">recipe.js</a>, <a href="recipe.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -1535,13 +1652,13 @@ The position will be the title length
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#checkFavorite">checkFavorite</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Sat Nov 27 2021 18:16:12 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Sat Nov 27 2021 18:27:31 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
