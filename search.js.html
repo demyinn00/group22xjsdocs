@@ -36,16 +36,15 @@ const tokenKey = `?apiKey=${apiKey}`;
 /**
  * Performs a simple text search through spoonacular
  * @param {object} inputList an object as defined below
- * inputList['query'] is the search phrase as a string
- * inputList['number'] is the number of results as a number
- * inputList['offset'] is the number of results to skip as a number
- * inputList['recipe-nutrition'] is a boolean specifying whether to show nutrition
  * @returns {object} json containing the results of the spoonacular query
  */
-export async function search(inputList) {
-  // Create the fetch url
-  // The order of the token need to be fixed is something wrong happened.
+export default async function search(inputList) {
+  /**
+   * @inner
+   * @param {string} searchUrl the url for search
+   */
   const searchUrl = 'https://api.spoonacular.com/recipes/complexSearch';
+  // The order of the token need to be fixed is something wrong happened.
   const tokenSearchInput = `&amp;query=${inputList.query}`;
   const tokenNumResults = `&amp;number=${inputList.number}`;
   const tokenOffset = `&amp;offset=${inputList.offset}`;
@@ -78,55 +77,7 @@ export async function search(inputList) {
       console.error(error);
     });
 
-  return fetchResults.results;
-}
-
-/**
- * Performs a simple text search through spoonacular
- * @param {object} inputList an object as defined below
- * inputList['query'] is the search phrase as a string
- * inputList['number'] is the number of results as a number
- * inputList['offset'] is the number of results to skip as a number
- * inputList['recipe-nutrition'] is a boolean specifying whether to show nutrition
- * @returns {object} json containing the results of the spoonacular query
- */
-export async function searchPageNumber(inputList) {
-  // Create the fetch url
-  // The order of the token need to be fixed is something wrong happened.
-  const searchUrl = 'https://api.spoonacular.com/recipes/complexSearch';
-  const tokenSearchInput = `&amp;query=${inputList.query}`;
-  const tokenNumResults = `&amp;number=${inputList.number}`;
-  const tokenOffset = `&amp;offset=${inputList.offset}`;
-  const tokenNutritionBool = `&amp;addRecipeNutrition=${inputList['recipe-nutrition']}`;
-  let fetchEndpoint = searchUrl + tokenKey + tokenSearchInput;
-  if (inputList.cuisineFilter !== '') {
-    const tokenCuisine = `&amp;cuisine=${inputList.cuisineFilter}`;
-    fetchEndpoint += tokenCuisine;
-  }
-  if (inputList.dietFilter !== '') {
-    const tokenDiet = `&amp;diet=${inputList.dietFilter}`;
-    fetchEndpoint += tokenDiet;
-  }
-  if (inputList.timeFilter !== '') {
-    const tokenTime = `&amp;maxReadyTime=${inputList.timeFilter}`;
-    fetchEndpoint += tokenTime;
-  }
-  if (inputList.typeFilter !== '') {
-    const tokenType = `&amp;type=${inputList.typeFilter}`;
-    fetchEndpoint += tokenType;
-  }
-  fetchEndpoint += tokenNutritionBool + tokenOffset + tokenNumResults;
-  console.log(fetchEndpoint);
-
-  // fetch the data
-  const fetchResults = await fetch(fetchEndpoint)
-    .then((response) => response.json())
-    .catch((error) => {
-      console.error('Fetch in search function failed');
-      console.error(error);
-    });
-
-  return fetchResults.totalResults;
+  return fetchResults;
 }
 </code></pre>
         </article>
@@ -138,13 +89,13 @@ export async function searchPageNumber(inputList) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#search">search</a></li><li><a href="global.html#searchPageNumber">searchPageNumber</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#clearObject">clearObject</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri Dec 03 2021 20:14:34 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Fri Dec 03 2021 20:16:10 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
