@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/UserLocalStorage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/UserLocalStorage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// 'favorites-master' is the default list
+const store = window.localStorage;
+
+/**
+ * Initlize an local storage.This function should only be called once
+ * @constructor
+ */
+export function initLocalStorage() {
+  const arrTemp = [];
+  store.setItem('favorites-master', JSON.stringify(arrTemp)); // Store all the recipes(hidden)
+  store.setItem('My Favorites', JSON.stringify(arrTemp)); // Default recipe set
+}
+
+/**
+ * Fetches from localstorage whether the recipe is already favorited or not
+ * @param {object} recipeObj A recipe object
+ * @return {boolean} Whether the recipe is already favorited
+ */
+export function checkFavorite(recipeObj) {
+  const storage = window.localStorage;
+  const list = storage.getItem('favorites-master');
+
+  const array = JSON.parse(list);
+  for (let i = 0; i &lt; array.length; i += 1) {
+    if (JSON.stringify(array[i]) === JSON.stringify(recipeObj)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * becuase differnet fetching from API returns object that has differnet field
+ * Using ID field from recipe object to compare equivilence
+ * @param {recipeObj} recipeObj
+ * @returns {boolean} true if recipeOBJ.id === any(master-favorite).id
+ */
+export function checkFavoritebyID(recipeObj) {
+  const storage = window.localStorage;
+  const list = storage.getItem('favorites-master');
+
+  const array = JSON.parse(list);
+  for (let i = 0; i &lt; array.length; i += 1) {
+    // compare two object by id
+    if (array[i].id === recipeObj.id) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * Add one recipe object into the favorite-master list. 'favorite-master' list is the default list
+ * @param {object} recipeObj A recipe object
+ */
+export function addRecipe(recipeObj) {
+  const storage = window.localStorage;
+  const list = storage.getItem('favorites-master');
+
+  const array = JSON.parse(list);
+  for (let i = 0; i &lt; array.length; i += 1) {
+    if (JSON.stringify(array[i]) === JSON.stringify(recipeObj)) {
+      return;
+    }
+  }
+  array.push(recipeObj);
+
+  storage.setItem('favorites-master', JSON.stringify(array));
+}
+
+/**
+ * Remove a recipe from favorite-master list
+ * @param {object} recipeObj A recipe object
+ */
+export function removeRecipe(recipeObj) {
+  const storage = window.localStorage;
+  const list = storage.getItem('favorites-master');
+
+  const array = JSON.parse(list);
+  for (let i = 0; i &lt; array.length; i += 1) {
+    if (JSON.stringify(array[i]) === JSON.stringify(recipeObj)) {
+      array.splice(i, 1);
+      break;
+    }
+  }
+  storage.setItem('favorites-master', JSON.stringify(array));
+}
+
+/**
+ * API may return object that are not exactly the same
+ * therefore, check ID for equivilence
+ * remove an recipe by ID
+ * @param {recipeObj} recipeObj
+ */
+export function removeRecipebyID(recipeObj) {
+  const storage = window.localStorage;
+  const list = storage.getItem('favorites-master');
+
+  const array = JSON.parse(list);
+  for (let i = 0; i &lt; array.length; i += 1) {
+    if (array[i].id === recipeObj.id) {
+      array.splice(i, 1);
+      break;
+    }
+  }
+  storage.setItem('favorites-master', JSON.stringify(array));
+}
+
+/**
+ * create another list whose naem is listName.
+ * when the listName is already a valid list, it will do nothing.
+ * @param {string} listName name of the list
+ */
+export function createList(listName) {
+  // Making sure that local storage does not already have it
+  if (localStorage.getItem(listName)) return;
+
+  console.log(`creating new list: ${listName}`);
+  const tempArr = [];
+  localStorage.setItem(listName, JSON.stringify(tempArr));
+}
+
+/**
+ * remove a list whose name is listName.
+ * do nothing when listName is not in the storage
+ * @param {string} listName name of the list
+ */
+export function removeList(listName) {
+  const storage = window.localStorage;
+  // making sure that local storage does not alraedy have it
+  if (storage.getItem(listName) != null) {
+    storage.removeItem(listName);
+  }
+}
+
+/**
+ * add a recipe ID to a specific listName.
+ * if listName is not already in the storage, it will do nothing
+ * @param {string} listName name of the list, must be in storage for it to function
+ * @param {object} recipeObj id property of the recipe
+ */
+export function addRecipebyList(listName, recipeObj) {
+  const storage = window.localStorage;
+
+  createList(listName);
+  console.log(storage.getItem(listName));
+  const list = storage.getItem(listName);
+  const array = JSON.parse(list);
+  for (let i = 0; i &lt; array.length; i += 1) {
+    if (JSON.stringify(array[i]) === JSON.stringify(recipeObj)) {
+      return;
+    }
+  }
+  array.push(recipeObj);
+  storage.setItem(listName, JSON.stringify(array));
+}
+
+/**
+ * remove an recipe id from the list.
+ * if the list is not found, do nothing
+ * @param {string} listName name of the list
+ * @param {object} recipeObj id property of the recipe
+ */
+export function removeRecipebyList(listName, recipeObj) {
+  const storage = window.localStorage;
+  if (storage.getItem(listName) != null) {
+    const list = storage.getItem(listName);
+    const array = JSON.parse(list);
+    for (let i = 0; i &lt; array.length; i += 1) {
+      if (JSON.stringify(array[i]) === JSON.stringify(recipeObj)) {
+        array.splice(i, 1);
+        break;
+      }
+    }
+    storage.setItem(listName, JSON.stringify(array));
+  }
+}
+
+/**
+ * remove an recipeObj from the list by the id of the recipe Obj
+ * if the list is not found, do nothing
+ * @param {string} listName name of the list
+ * @param {object} recipeObj id property of the recipe
+ */
+export function removeRecipebyListbyID(listName, recipeObj) {
+  const storage = window.localStorage;
+  if (storage.getItem(listName) != null) {
+    const list = storage.getItem(listName);
+    const array = JSON.parse(list);
+    for (let i = 0; i &lt; array.length; i += 1) {
+      if (array[i].id === recipeObj.id) {
+        array.splice(i, 1);
+        break;
+      }
+    }
+    storage.setItem(listName, JSON.stringify(array));
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Search.html">Search</a></li></ul><h3>Classes</h3><ul><li><a href="initLocalStorage.html">initLocalStorage</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RecipeCard.html">RecipeCard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addRecipe">addRecipe</a></li><li><a href="global.html#addRecipebyList">addRecipebyList</a></li><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#checkFavorite">checkFavorite</a></li><li><a href="global.html#checkFavoritebyID">checkFavoritebyID</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#createList">createList</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#imageCardTemplate">imageCardTemplate</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#removeList">removeList</a></li><li><a href="global.html#removeRecipe">removeRecipe</a></li><li><a href="global.html#removeRecipebyID">removeRecipebyID</a></li><li><a href="global.html#removeRecipebyList">removeRecipebyList</a></li><li><a href="global.html#removeRecipebyListbyID">removeRecipebyListbyID</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Dec 06 2021 06:26:43 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

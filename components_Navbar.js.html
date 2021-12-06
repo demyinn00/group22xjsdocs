@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/Navbar.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/Navbar.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = '../styles/navbar.css';
+
+// Add a new button for the sidebar
+const navbarTemplate = document.createElement('template');
+navbarTemplate.innerHTML = `
+	&lt;nav class="navbar">
+    &lt;a class="sidebar-button">
+      &lt;img class="sidebar-icon" src="../assets/sidebar.svg" alt="sidebar">&lt;/img>
+    &lt;/a>
+    &lt;div class="navbar-section">
+		  &lt;a href="/webpages/home.html">
+			  &lt;h1 class="logo">iCook&lt;/h1>
+		  &lt;/a>
+		  &lt;div class="nav-search">
+			  &lt;img class="nav-search-icon" src="../assets/search.svg" alt="search" />
+			  &lt;input class="nav-search-input" type='text' placeholder="Search" />
+		  &lt;/div>
+		  &lt;a class="nav-favorite" href="/webpages/favorite.html">
+  			&lt;p>Favorites&lt;/p>
+		  &lt;/a>
+		  &lt;a class="nav-favorite-mobile" href="/webpages/favorite.html">
+  			&lt;img src="../assets/favorite.svg" alt="favorite" />
+		  &lt;/a>
+    &lt;/div>
+	&lt;/nav>
+  &lt;section class="sidebar-content">
+    &lt;h5>Cuisine&lt;/h5>
+    &lt;ul>
+      &lt;li>&lt;input type="checkbox" id="american" class="cuisine cuisine0"> American&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="chinese" class="cuisine cuisine1"> Chinese&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="italian" class="cuisine cuisine2"> Italian&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="mexican" class="cuisine cuisine3"> Mexican&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="indian" class="cuisine cuisine4"> Indian&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="thai" class="cuisine cuisine5"> Thai&lt;/li>
+    &lt;/ul>
+    &lt;h5>Diet&lt;/h5>
+    &lt;ul>
+      &lt;li>&lt;input type="checkbox" id="vegetarian" class="diet diet0"> Vegetarian&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="vegan" class="diet diet1"> Vegan&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="gluten%20free" class="diet diet2"> Gluten Free&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="paleo" class="diet diet3"> Paleo&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="ketogenic" class="diet diet4"> Ketogenic&lt;/li>
+    &lt;/ul>
+    &lt;h5>Time&lt;/h5>
+    &lt;ul>
+      &lt;li>&lt;input type="checkbox" id="15" class="time time0"> 0-15 Minutes&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="30" class="time time1"> 0-30 Minutes&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="45" class="time time2"> 0-45 Minutes&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="60" class="time time3"> 0-1 hr&lt;/li>
+    &lt;/ul>
+    &lt;h5>Type of Meal&lt;/h5>
+    &lt;ul>
+      &lt;li>&lt;input type="checkbox" id="breakfast" class="typeOfMeal typeOfMeal0"> Breakfast&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="main%20course" class="typeOfMeal typeOfMeal1"> Main Course&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="dessert" class="typeOfMeal typeOfMeal2"> Dessert&lt;/li>
+      &lt;li>&lt;input type="checkbox" id="drink" class="typeOfMeal typeOfMeal3"> Drink&lt;/li>
+    &lt;/ul>
+    &lt;button class="apply-filter">Apply filter&lt;/button>
+	&lt;/section>`;
+
+class Navbar extends HTMLElement {
+  /**
+   * Contructor for the Navbar class
+   */
+  constructor() {
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+    this.isSidebarShow = false;
+  }
+
+  /**
+   * Generates a query string to pass the search to the search page
+   * @param {string} searchTerm the user's search phrase
+   * @return {string} the query string
+   */
+  // eslint-disable-next-line class-methods-use-this
+  generateQueryString(searchTerm) {
+    let queryString = '?search=';
+    for (let i = 0; i &lt; searchTerm.length; i += 1) {
+      const currChar = searchTerm.charAt(i);
+      const currCharCode = searchTerm.charCodeAt(i);
+      console.log(currChar);
+      // Allow all letters and numbers to enter the query
+      if ((currCharCode >= 65 &amp;&amp; currCharCode &lt;= 90) || (currCharCode >= 97 &amp;&amp; currCharCode &lt;= 122) || (currCharCode >= 48 &amp;&amp; currCharCode &lt;= 57)) {
+        queryString += currChar;
+        // Spaces become + signs
+      } else if (currCharCode === '32') {
+        queryString += '+';
+        // All other characters become - signs
+      } else {
+        queryString += '-';
+      }
+    }
+    return queryString;
+  }
+
+  connectedCallback() {
+    this.shadow.appendChild(link);
+    this.shadow.appendChild(navbarTemplate.content);
+
+    // Desktop Functionality
+    let searchTerm = '';
+    const searchInput = this.shadow.querySelector('.nav-search').querySelector('input');
+
+    searchInput.addEventListener('keyup', (event) => {
+      searchTerm = event.target.value;
+
+      if (event.code === 'Enter') {
+        const sidebarContent = this.shadow.querySelector('.sidebar-content');
+        const inputList = {};
+        inputList.query = searchTerm;
+        inputList.number = 10; // Default returns 10 recipes
+        inputList.offset = 0;
+        inputList.sort = '';
+        inputList.recipeNutrition = 'true';
+        const checkboxesCuisine = sidebarContent.querySelectorAll('.cuisine');
+        const checkboxesDiet = sidebarContent.querySelectorAll('.diet');
+        const checkboxesTime = sidebarContent.querySelectorAll('.time');
+        const checkboxesType = sidebarContent.querySelectorAll('.typeOfMeal');
+        let cuisineFilter = '';
+        let dietFilter = '';
+        let timeFilter = '';
+        let typeFilter = '';
+        const cuisineFilterCheckbox = [];
+        const dietFilterCheckbox = [];
+        const timeFilterCheckbox = [];
+        const typeFilterCheckbox = [];
+        for (let i = 0; i &lt; checkboxesCuisine.length; i += 1) {
+          const item = checkboxesCuisine[i];
+          if (item.checked) {
+            cuisineFilter = `${cuisineFilter + item.id},`;
+            cuisineFilterCheckbox[i] = 1;
+          } else {
+            cuisineFilterCheckbox[i] = 0;
+          }
+        }
+        for (let i = 0; i &lt; checkboxesDiet.length; i += 1) {
+          const item = checkboxesDiet[i];
+          if (item.checked) {
+            dietFilter = `${dietFilter + item.id},`;
+            dietFilterCheckbox[i] = 1;
+          } else {
+            dietFilterCheckbox[i] = 0;
+          }
+        }
+        for (let i = 0; i &lt; checkboxesTime.length; i += 1) {
+          const item = checkboxesTime[i];
+          if (item.checked) {
+            timeFilter = Math.max(timeFilter, item.id);
+            timeFilterCheckbox[i] = 1;
+          } else {
+            timeFilterCheckbox[i] = 0;
+          }
+        }
+        for (let i = 0; i &lt; checkboxesType.length; i += 1) {
+          const item = checkboxesType[i];
+          if (item.checked) {
+            typeFilter = `${typeFilter + item.id},`;
+            typeFilterCheckbox[i] = 1;
+          } else {
+            typeFilterCheckbox[i] = 0;
+          }
+        }
+        if (cuisineFilter.length !== 0) cuisineFilter = cuisineFilter.substring(0, cuisineFilter.length - 1);
+        if (dietFilter.length !== 0) dietFilter = dietFilter.substring(0, dietFilter.length - 1);
+        if (typeFilter.length !== 0) typeFilter = typeFilter.substring(0, typeFilter.length - 1);
+        inputList.cuisineFilter = cuisineFilter;
+        inputList.dietFilter = dietFilter;
+        inputList.timeFilter = timeFilter;
+        inputList.typeFilter = typeFilter;
+        inputList.cuisineFilterCheckbox = cuisineFilterCheckbox;
+        inputList.dietFilterCheckbox = dietFilterCheckbox;
+        inputList.timeFilterCheckbox = timeFilterCheckbox;
+        inputList.typeFilterCheckbox = typeFilterCheckbox;
+        window.localStorage.setItem('QueryList', JSON.stringify(inputList));
+        window.location.href = `search.html${this.generateQueryString(searchTerm)}`;
+      }
+    });
+
+    // Detect if the device is mobile or PC
+    const isMobile = window.matchMedia('only screen and (max-width: 768px)').matches;
+
+    // Sidebar Button listener
+    const sidebarButton = this.shadow.querySelector('.sidebar-button');
+    sidebarButton.addEventListener('click', () => {
+      const sidebarContent = this.shadow.querySelector('.sidebar-content');
+      if (!isMobile) {
+        if (!this.isSidebarShow) {
+          const mainSection = document.querySelector('.search-page');
+          mainSection.style.marginLeft = `${225}px`;
+          sidebarContent.style.display = 'flex';
+          sidebarContent.style.flexDirection = 'column';
+          this.isSidebarShow = true;
+        } else {
+          const mainSection = document.querySelector('.search-page');
+          mainSection.style.marginLeft = `${0}px`;
+          sidebarContent.style.display = 'none';
+          this.isSidebarShow = false;
+        }
+      } else if (!this.isSidebarShow) {
+        sidebarContent.style.display = 'flex';
+        sidebarContent.style.flexDirection = 'column';
+        this.isSidebarShow = true;
+      } else {
+        sidebarContent.style.display = 'none';
+        this.isSidebarShow = false;
+      }
+    });
+  }
+}
+
+customElements.define('navbar-component', Navbar);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Search.html">Search</a></li></ul><h3>Classes</h3><ul><li><a href="initLocalStorage.html">initLocalStorage</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RecipeCard.html">RecipeCard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addRecipe">addRecipe</a></li><li><a href="global.html#addRecipebyList">addRecipebyList</a></li><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#checkFavorite">checkFavorite</a></li><li><a href="global.html#checkFavoritebyID">checkFavoritebyID</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#createList">createList</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#imageCardTemplate">imageCardTemplate</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#removeList">removeList</a></li><li><a href="global.html#removeRecipe">removeRecipe</a></li><li><a href="global.html#removeRecipebyID">removeRecipebyID</a></li><li><a href="global.html#removeRecipebyList">removeRecipebyList</a></li><li><a href="global.html#removeRecipebyListbyID">removeRecipebyListbyID</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Dec 06 2021 06:26:43 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
