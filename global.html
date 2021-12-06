@@ -1279,6 +1279,398 @@ therefore, only initilize the favorite-master local storage when it does not eve
     
 
     
+    <h4 class="name" id="module:Search"><span class="type-signature"></span>module:Search<span class="signature">(inputList)</span><span class="type-signature"> &rarr; {object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Performs a text search through spoonacular
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>inputList</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object that contain a list of tokens as search filter
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>query</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The user input for search</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>number</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of expected results (between 1 and 100).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The number of results to skip (between 0 and 900).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>sort</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The token for sort mode</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>recipeNutrition</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The token request for nutrition information</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>cuisineFilter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The filter which select the cuisine(s) of the recipes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dietFilter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The filter which select the diet(s) of the recipes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>timeFilter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The filter which select the max ready time of the recipes.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>typeFilter</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The filter which select the type of the recipes.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="search.js.html">search.js</a>, <a href="search.js.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    - json file containing the results of the spoonacular query
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
     <h4 class="name" id="showDropdown"><span class="type-signature"></span>showDropdown<span class="signature">(recipeObj)</span><span class="type-signature"></span></h4>
     
 
@@ -1582,13 +1974,13 @@ The position will be the title length
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Search.html">Search</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#showDropdown">showDropdown</a></li><li><a href="global.html#showResults">showResults</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Dec 06 2021 06:10:41 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Dec 06 2021 06:17:01 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
