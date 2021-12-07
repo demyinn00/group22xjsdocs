@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: scripts/favorites.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: scripts/favorites.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Handles favorites page functionality and storing the recipes a user favorites.
+ */
+
+const storage = window.localStorage;
+const recipeLists = [];
+let selectedRecipes = [];
+let editMode = false;
+let copyMode = false;
+let performedOperation = false;
+
+/**
+ * Hide the select guide text
+ */
+function hideSelectGuideText() {
+  const selectGuideText = document.getElementById('select-guide-text');
+  selectGuideText.style.visibility = 'hidden';
+  selectGuideText.style.height = '0px';
+}
+
+/**
+ * Show the select guide text
+ */
+function showSelectGuideText() {
+  const selectGuideText = document.getElementById('select-guide-text');
+  selectGuideText.style.visibility = 'visible';
+  selectGuideText.style.height = 'auto';
+}
+
+/**
+ * Enter edit mode on favorites page
+ */
+function enterEditMode() {
+  if (editMode) return;
+  if (copyMode) {
+    // eslint-disable-next-line no-use-before-define
+    exitCopyMode();
+    return;
+  }
+  editMode = true;
+  // Style page for edit mode
+  const editButton = document.getElementById('edit');
+  const cancelButton = document.getElementById('cancel');
+  const deleteButton = document.getElementById('delete');
+  const copyButton = document.getElementById('copy');
+  document.body.style.backgroundColor = '#EEEEEE';
+  editButton.style.display = 'none';
+  cancelButton.style.display = 'inline-block';
+  // Select guide text should hide if no recipes are selected
+  // Otherwise it should appear
+  if (selectedRecipes.length > 0) {
+    hideSelectGuideText();
+    deleteButton.style.display = 'inline-block';
+    copyButton.style.display = 'inline-block';
+  } else {
+    showSelectGuideText();
+  }
+  // Style edit button text appropriately
+  if (performedOperation) {
+    cancelButton.innerText = 'Save';
+  } else {
+    cancelButton.innerText = 'Cancel';
+  }
+  // Make favorites list titles editable
+  const listTitles = document.querySelectorAll('h4');
+  for (let i = 0; i &lt; listTitles.length; i += 1) {
+    listTitles[i].setAttribute('contenteditable', true);
+  }
+  // Enter select mode on all recipe cards
+  for (const list of recipeLists) {
+    for (let i = 0; i &lt; list.list.length; i += 1) {
+      list.list[i].enterSelectMode();
+    }
+  }
+}
+
+/**
+ * Exit edit mode on favorites page
+ */
+function exitEditMode() {
+  if (!editMode) return;
+  if (copyMode) {
+    // eslint-disable-next-line no-use-before-define
+    exitCopyMode();
+  }
+  editMode = false;
+  performedOperation = false;
+  // Style page for default mode
+  const editButton = document.getElementById('edit');
+  const cancelButton = document.getElementById('cancel');
+  const deleteButton = document.getElementById('delete');
+  const copyButton = document.getElementById('copy');
+  document.body.style.backgroundColor = '#FFFFFF';
+  hideSelectGuideText();
+  editButton.style.display = 'inline-block';
+  cancelButton.style.display = 'none';
+  deleteButton.style.display = 'none';
+  copyButton.style.display = 'none';
+  // Make favorites list titles uneditable
+  const listTitles = document.querySelectorAll('h4');
+  for (let i = 0; i &lt; listTitles.length; i += 1) {
+    listTitles[i].setAttribute('contenteditable', false);
+  }
+  // Exit select mode on recipe cards
+  for (const list of recipeLists) {
+    for (let i = 0; i &lt; list.list.length; i += 1) {
+      list.list[i].exitSelectMode();
+    }
+  }
+}
+
+/**
+ * Enter copy mode on favorites page.
+ */
+function enterCopyMode() {
+  if (copyMode) return;
+  if (!editMode) {
+    enterEditMode();
+  }
+  copyMode = true;
+  editMode = false;
+  // Format menu buttons for copy mode
+  const editButton = document.getElementById('edit');
+  const cancelButton = document.getElementById('cancel');
+  const deleteButton = document.getElementById('delete');
+  const copyButton = document.getElementById('copy');
+  copyButton.style.display = 'none';
+  editButton.style.display = 'none';
+  deleteButton.style.display = 'none';
+  cancelButton.style.display = 'inline-block';
+  cancelButton.innerText = 'Cancel';
+  // Make copy here buttons visible
+  for (let i = 0; i &lt; recipeLists.length; i += 1) {
+    const copyHereButton = recipeLists[i].shadow.querySelector('.copy-here');
+    copyHereButton.style.display = 'inline-block';
+    // Title text should fit in space available
+    const titleText = recipeLists[i].shadow.querySelector('.list-name h4');
+    titleText.style.width = 'calc(100% - 160px)';
+  }
+}
+
+/**
+ * Exit copy mode on favorites page. Returns you to edit mode.
+ */
+function exitCopyMode() {
+  if (!copyMode) return;
+  copyMode = false;
+  for (let i = 0; i &lt; recipeLists.length; i += 1) {
+    const copyHereButton = recipeLists[i].shadow.querySelector('.copy-here');
+    copyHereButton.style.display = 'none';
+    // Title text should fit in ALL space available without wrapping
+    const titleText = recipeLists[i].shadow.querySelector('.list-name h4');
+    titleText.style.width = '50vw';
+  }
+  enterEditMode();
+}
+
+/**
+ * Copy the selection to the UserList, ignoring duplicates
+ * @param {object} userList the UserList to copy to
+ */
+function copy(userList) {
+  for (let i = 0; i &lt; selectedRecipes.length; i += 1) {
+    // Iterate over the user list and see if a selected recipe is
+    // already in the list.
+    let foundInList = false;
+    for (let j = 0; j &lt; userList.list.length; j += 1) {
+      if (selectedRecipes[i].recipeId === userList.list[j].recipeId) {
+        foundInList = true;
+        break;
+      }
+    }
+    // If the recipe wasn't in the user list, add it to the user list
+    if (!foundInList) {
+      // Create a deep copy of the recicpe card
+      const recipeCard = selectedRecipes[i].cloneNode(true);
+      recipeCard.recipe = selectedRecipes[i].recipe;
+      // Exit and reenter copy mode to reset styling
+      recipeCard.exitSelectMode();
+      recipeCard.enterSelectMode();
+      // Add the card to the user list
+      userList.pushRecipe(recipeCard);
+    }
+  }
+  // Deselect recipes after copy operation
+  for (let i = selectedRecipes.length - 1; i > -1; i -= 1) {
+    // console.log(`deselecting recipe ${selectedRecipes[i].recipeId}`);
+    selectedRecipes[i].deselect();
+  }
+  // Update edit button text because the user has performed an operation
+  const cancelButton = document.getElementById('cancel');
+  performedOperation = true;
+  cancelButton.innerText = 'Save';
+  exitCopyMode();
+}
+
+async function init() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('../sw.js').then(
+        () => {},
+        (err) => {
+          console.error(err);
+        }
+      );
+    });
+  }
+
+  const mainSection = document.querySelector('.favorites-page');
+  const editButton = document.getElementById('edit');
+  const cancelButton = document.getElementById('cancel');
+  const deleteButton = document.getElementById('delete');
+  const copyButton = document.getElementById('copy');
+  // Disable the sidebar button
+  const sidebarButton = document.querySelector('navbar-component').shadow.querySelector('.sidebar-button');
+  sidebarButton.style.display = 'none';
+  // Hide the sidebar
+  const navbarComponent = document.querySelector('navbar-component');
+  const sidebarContent = navbarComponent.shadow.querySelector('.sidebar-content');
+  sidebarContent.style.display = 'none';
+
+  for (let i = 0; i &lt; storage.length; i += 1) {
+    // Do not display master favorites on favorites page
+    if (storage.key(i) === 'favorites-master') continue;
+    const userList = document.createElement('user-list');
+    const arrRecipeObj = JSON.parse(storage.getItem(localStorage.key(i)));
+    userList.listName = storage.key(i);
+    userList.list = arrRecipeObj;
+    // Add a recipe to selectedRecipes when selected
+    // eslint-disable-next-line no-loop-func
+    userList.addEventListener('selected', (event) => {
+      selectedRecipes.push(event.detail);
+      hideSelectGuideText();
+      copyButton.style.display = 'inline-block';
+      deleteButton.style.display = 'inline-block';
+      console.log(selectedRecipes);
+    });
+
+    // Remove a recipe from the selectedRecipes list when deselected
+    // eslint-disable-next-line no-loop-func
+    userList.addEventListener('deselected', (event) => {
+      selectedRecipes.pop(event.detail);
+      if (selectedRecipes.length === 0) {
+        if (copyMode) exitCopyMode();
+        showSelectGuideText();
+        copyButton.style.display = 'none';
+        deleteButton.style.display = 'none';
+      }
+      console.log(selectedRecipes);
+    });
+    if (userList.listName === 'My Favorites') {
+      mainSection.insertBefore(userList, mainSection.firstChild);
+    } else {
+      mainSection.appendChild(userList);
+    }
+    recipeLists.push(userList);
+  }
+
+  // eslint-disable-next-line no-unused-vars
+  /* async function getRecipebyID(id) {
+    const fetchEndPoint = `https://api.spoonacular.com/recipes/${id}/information${tokenKey}&amp;includeNutrition=false`;
+    // console.log("fetch_endpoint", fetchEndPoint);
+
+    const fetchResults = await fetch(fetchEndPoint)
+      .then((response) => response.json())
+      .catch((error) => {
+        console.error('Fetch in favorite page failed');
+        console.error(error);
+      });
+
+    // console.log("result is: ", fetchResults);
+    return fetchResults;
+  } */
+
+  // When copy is clicked, copy mode should be entered
+  copyButton.addEventListener('click', () => {
+    if (!copyMode) {
+      if (!editMode) {
+        enterEditMode();
+      }
+      enterCopyMode();
+    }
+  });
+
+  // When edit is clicked, edit mode should be entered
+  editButton.addEventListener('click', () => {
+    if (!editMode) {
+      enterEditMode();
+    }
+  });
+
+  // When cancel is clicked, the user should either exit
+  // copy mode or edit mode
+  cancelButton.addEventListener('click', () => {
+    if (editMode) {
+      exitEditMode();
+    }
+    if (copyMode) {
+      exitCopyMode();
+    }
+  });
+
+  // Delete all selected recipes when the user clicks delete
+  deleteButton.addEventListener('click', () => {
+    // Iterate and delete selected recipes
+    for (let i = 0; i &lt; selectedRecipes.length; i += 1) {
+      selectedRecipes[i].delete();
+    }
+    // Clear the user's selection once recipes are deleted
+    selectedRecipes = [];
+    // Update cancel button text to say "Save"
+    performedOperation = true;
+    cancelButton.innerText = 'Save';
+    // The user has no selected recipes, so show the select guide text
+    // and hide operations buttons
+    showSelectGuideText();
+    copyButton.style.display = 'none';
+    deleteButton.style.display = 'none';
+  });
+
+  // Listen for a copy here button to be clicked
+  document.addEventListener('copy-to-list', (event) => {
+    copy(event.detail);
+  });
+
+  // Event listener for escape keybind. Will attempt to deselect first.
+  // If it fails, it will attempt to exit edit mode. If it fails,
+  // it will attempt to exit copy mode.
+  document.addEventListener('keydown', (event) => {
+    // eslint-disable-next-line eqeqeq
+    if (event.key == 'Escape') {
+      if (selectedRecipes.length > 0) {
+        for (let i = selectedRecipes.length - 1; i > -1; i -= 1) {
+          selectedRecipes[i].deselect();
+        }
+      } else if (editMode) {
+        exitEditMode();
+      } else if (copyMode) {
+        exitCopyMode();
+      }
+    }
+  });
+}
+
+window.addEventListener('DOMContentLoaded', init);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-Search.html">Search</a></li><li><a href="module-UserLocalStorage.html">UserLocalStorage</a></li></ul><h3>Classes</h3><ul><li><a href="module-UserLocalStorage.initLocalStorage.html">initLocalStorage</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="RecipeCard.html">RecipeCard</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addToCheckedLists">addToCheckedLists</a></li><li><a href="global.html#addToCustomList">addToCustomList</a></li><li><a href="global.html#clearResults">clearResults</a></li><li><a href="global.html#copy">copy</a></li><li><a href="global.html#enterCopyMode">enterCopyMode</a></li><li><a href="global.html#enterEditMode">enterEditMode</a></li><li><a href="global.html#exitCopyMode">exitCopyMode</a></li><li><a href="global.html#exitEditMode">exitEditMode</a></li><li><a href="global.html#formatTime">formatTime</a></li><li><a href="global.html#hideDropdown">hideDropdown</a></li><li><a href="global.html#hideSelectGuideText">hideSelectGuideText</a></li><li><a href="global.html#imageCardTemplate">imageCardTemplate</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#initializeDropdown">initializeDropdown</a></li><li><a href="global.html#initializeHearts">initializeHearts</a></li><li><a href="global.html#initLocalStorageDoubt">initLocalStorageDoubt</a></li><li><a href="global.html#lookup">lookup</a></li><li><a href="global.html#showResults">showResults</a></li><li><a href="global.html#showSelectGuideText">showSelectGuideText</a></li><li><a href="global.html#storage">storage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Dec 07 2021 07:02:46 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
